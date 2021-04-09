@@ -3,7 +3,7 @@
 /**
  * boringmenu.js
  *
- * @version 0.0.1
+ * @version 0.0.2
  */
 export default class boringmenu {
 
@@ -47,6 +47,9 @@ export default class boringmenu {
 			return;
 		}
 
+		// Running counter for menu num
+		this.menuNum = 0;
+
 		// Polyfill NodeList.forEach (IE11)
 		if ('NodeList' in window && !NodeList.prototype.forEach) {
 			NodeList.prototype.forEach = function (callback, thisArg) {
@@ -80,14 +83,15 @@ export default class boringmenu {
 	 * @param {Object} menu Menu element
 	 */
 	findSubMenus(menu) {
-		menu.querySelectorAll(this.options.selectors.menuItem).forEach((menuItem, index) => {
+		menu.querySelectorAll(this.options.selectors.menuItem).forEach((menuItem) => {
 
 			// Look for a submenu, bail out early if none found
 			const submenu = menuItem.querySelector('ul');
 			if (!submenu) return;
 
 			// Add unique ID
-			submenu.setAttribute('id', this.options.id + '-' + index);
+			this.menuNum++;
+			submenu.setAttribute('id', this.options.id + '-' + this.menuNum);
 
 			// Hide menu
 			if (!menuItem.classList.contains(this.options.classes.menuItemActive) && !submenu.querySelectorAll('.' + this.options.classes.menuItemActive).length) {
@@ -196,7 +200,7 @@ export default class boringmenu {
 				const menuToggleIconClass = menuToggleIcon;
 				menuToggleIcon = document.createElement('i');
 				menuToggleIcon.setAttribute('aria-hidden', true);
-				menuToggleIconClass.split(' ').forEach(iconClass => {
+				menuToggleIconClass.split(' ').forEach((iconClass) => {
 					menuToggleIcon.classList.add(iconClass);
 				});
 			}
