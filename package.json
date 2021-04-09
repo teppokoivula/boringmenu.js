@@ -1,0 +1,26 @@
+{
+    "name": "boringmenu.js",
+    "version": "0.0.1",
+    "description": "Boring menu",
+    "scripts": {
+        "build": "parcel build ./src/index.js -o ./dist/boringmenu.min.js --experimental-scope-hoisting && parcel build ./scss/boringmenu.scss -o ./dist/boringmenu.min.css"
+    },
+    "browserslist": [
+        "defaults"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/teppokoivula/boringmenu.js.git"
+    },
+    "bugs": {
+        "url": "https://github.com/teppokoivula/boringmenu.js/issues"
+    },
+    "homepage": "https://github.com/teppokoivula/boringmenu.js#readme",
+    "devDependencies": {
+        "@babel/core": "^7.13.15",
+        "@babel/plugin-transform-object-assign": "^7.12.13",
+        "cssnano": "^4.1.11",
+        "element-qsa-scope": "^1.1.0",
+        "sass": "^1.32.8"
+    }
+}
