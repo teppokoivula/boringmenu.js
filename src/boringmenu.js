@@ -3,7 +3,7 @@
 /**
  * boringmenu.js
  *
- * @version 0.0.2
+ * @version 0.0.3
  */
 export default class boringmenu {
 
@@ -161,7 +161,8 @@ export default class boringmenu {
 		}
 
 		// Add click event listener
-		menuToggle.addEventListener('click', () => {
+		menuToggle.addEventListener('click', (event) => {
+			event.stopPropagation();
 			const menuArgs = this.toggleMenu(submenu, menuToggle, menuToggleText, menuToggleIcon, !submenu.hidden);
 			if (menuArgs.menuToggleIcon != null) {
 				menuToggleIcon = menuArgs.menuToggleIcon;
