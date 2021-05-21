@@ -1,6 +1,6 @@
 {
     "name": "boringmenu.js",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "Boring menu",
     "scripts": {
         "build": "parcel build ./src/index.js -o ./dist/boringmenu.min.js --experimental-scope-hoisting && parcel build ./scss/boringmenu.scss -o ./dist/boringmenu.min.css"
@@ -20,6 +20,7 @@
         "@babel/core": "^7.13.15",
         "@babel/plugin-transform-object-assign": "^7.12.13",
         "cssnano": "^4.1.11",
+        "custom-event-polyfill": "^1.0.7",
         "element-qsa-scope": "^1.1.0",
         "sass": "^1.32.8"
     }
