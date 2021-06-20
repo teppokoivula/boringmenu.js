@@ -1,6 +1,6 @@
 {
     "name": "boringmenu.js",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "Boring menu",
     "scripts": {
         "build": "parcel build ./src/index.js -o ./dist/boringmenu.min.js --experimental-scope-hoisting && parcel build ./scss/boringmenu.scss -o ./dist/boringmenu.min.css"
