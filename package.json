@@ -27,8 +27,6 @@
     },
     "homepage": "https://github.com/teppokoivula/boringmenu.js#readme",
     "devDependencies": {
-        "@babel/core": "^7.15.8",
-        "@babel/plugin-transform-object-assign": "^7.14.5",
         "custom-event-polyfill": "^1.0.7",
         "element-qsa-scope": "^1.1.0",
         "parcel": "next",
