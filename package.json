@@ -2,17 +2,19 @@
     "name": "boringmenu.js",
     "version": "0.1.0",
     "description": "Boring menu",
+    "author": "Teppo Koivula <teppo.koivula@gmail.com> (https://github.com/teppokoivula)",
+    "license": "MPL-2.0",
     "scripts": {
-        "build": "parcel build"
+        "build": "parcel build --cache-dir .parcel-cache"
     },
-    "scss": "./dist/boringmenu.min.css",
-    "app": "./dist/boringmenu.min.js",
+    "scss": "dist/boringmenu.min.css",
+    "app": "dist/boringmenu.min.js",
     "targets": {
         "scss": {
-            "source": "./scss/boringmenu.scss"
+            "source": "scss/boringmenu.scss"
         },
         "app": {
-            "source": "./src/index.js"
+            "source": "src/index.js"
         }
     },
     "browserslist": [
