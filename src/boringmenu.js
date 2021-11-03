@@ -3,7 +3,7 @@
 /**
  * boringmenu.js
  *
- * @version 0.1.0
+ * @version 0.1.1
  */
 export default class boringmenu {
 
@@ -253,7 +253,7 @@ export default class boringmenu {
 		}
 		for (let i = 0; i < keys.length; i++) {
 			const key = keys[i];
-			if (typeof defaults[key] === 'object') {
+			if (defaults[key] !== null && typeof defaults[key] === 'object') {
 				Object.assign(options[key], this.mergeOptions(defaults[key], options[key]));
 			}
 		}

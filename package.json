@@ -1,6 +1,6 @@
 {
     "name": "boringmenu.js",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Boring menu",
     "author": "Teppo Koivula <teppo.koivula@gmail.com> (https://github.com/teppokoivula)",
     "license": "MPL-2.0",
@@ -32,6 +32,6 @@
         "custom-event-polyfill": "^1.0.7",
         "element-qsa-scope": "^1.1.0",
         "parcel": "next",
-        "sass": "^1.42.1"
+        "sass": "^1.43.4"
     }
 }
