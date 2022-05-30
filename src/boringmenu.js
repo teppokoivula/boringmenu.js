@@ -3,7 +3,7 @@
 /**
  * boringmenu.js
  *
- * @version 0.1.1
+ * @version 0.2.0
  */
 export default class boringmenu {
 
@@ -52,8 +52,14 @@ export default class boringmenu {
 			return;
 		}
 
+		// Set root menu depth
+		this.menu.setAttribute('data-boringmenu-depth', 1);
+
 		// Running counter for menu num
 		this.menuNum = 0;
+
+		// Menu object stash
+		this.menuObjects = [this.menu];
 
 		// Merge menu options with existing options
 		if (this.menu.getAttribute('data-boringmenu')) {
@@ -104,17 +110,19 @@ export default class boringmenu {
 	 * Find submenu elements and create toggles
 	 *
 	 * @param {Object} menu
+	 * @param {Number} depth
 	 */
-	findSubMenus(menu) {
+	findSubMenus(menu, depth = 2) {
 		menu.querySelectorAll(this.options.selectors.item).forEach((item) => {
 
 			// Look for a submenu, bail out early if none found
 			const submenu = item.querySelector('ul');
 			if (!submenu) return;
 
-			// Add unique ID
+			// Add unique ID and keep track of depth
 			this.menuNum++;
 			submenu.setAttribute('id', this.options.id + '-' + this.menuNum);
+			submenu.setAttribute('data-boringmenu-depth', depth);
 
 			// Hide menu
 			if (!item.classList.contains(this.options.classes.itemActive) && !item.querySelector('.' + this.options.classes.itemActive)) {
@@ -124,8 +132,11 @@ export default class boringmenu {
 			// Insert toggle button before menu item
 			submenu.parentNode.insertBefore(this.getToggle(submenu), submenu);
 
+			// Store menu in stash
+			this.menuObjects.push(submenu);
+
 			// Find nested submenu elements
-			this.findSubMenus(submenu);
+			this.findSubMenus(submenu, depth + 1);
 		});
 	}
 
@@ -137,9 +148,10 @@ export default class boringmenu {
 	 * @param {Object} menuToggleText
 	 * @param {(Object|null)} menuToggleIcon
 	 * @param {boolean} hiddenState
+	 * @param {boolean} triggerEvent
 	 * @returns {Object} Modified arguments
 	 */
-	toggleMenu(menu, menuToggle, menuToggleText, menuToggleIcon, hiddenState) {
+	toggleMenu(menu, menuToggle, menuToggleText, menuToggleIcon, hiddenState, triggerEvent = true) {
 		menu.hidden = hiddenState;
 		menuToggle.setAttribute('aria-expanded', !menu.hidden);
 		menuToggleText.nodeValue = this.options.labels[menu.hidden ? 'menu.open' : 'menu.close'];
@@ -147,6 +159,16 @@ export default class boringmenu {
 			const newMenuToggleIcon = this.getToggleIcon(menu, menuToggleIcon);
 			menuToggleIcon.parentNode.replaceChild(newMenuToggleIcon, menuToggleIcon);
 			menuToggleIcon = newMenuToggleIcon;
+		}
+		if (triggerEvent) {
+			this.menu.dispatchEvent(new CustomEvent('boringmenu-menu-toggle-done', {
+				bubbles: true,
+				cancelable: true,
+				detail: {
+					'menu': menu,
+					'menuDepth': menu.getAttribute('data-boringmenu-depth'),
+				}
+			}));
 		}
 		return {
 			menuToggleIcon: menuToggleIcon
@@ -205,6 +227,9 @@ export default class boringmenu {
 				}
 			}
 		});
+
+		// Store reference to toggle in menu
+		submenu.menuToggle = menuToggle;
 
 		return menuToggle;
 	}
@@ -268,6 +293,24 @@ export default class boringmenu {
 	 */
 	getID() {
 		return Date.now();
+	}
+
+	/**
+	 * Get root menu object
+	 *
+	 * @returns {Object}
+	 */
+	getMenu() {
+		return this.menu;
+	}
+
+	/**
+	 * Get array of all menu objects
+	 *
+	 * @returns {Object}
+	 */
+	 getMenuObjects() {
+		return this.menuObjects;
 	}
 
 	/**
