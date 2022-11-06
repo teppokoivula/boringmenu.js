@@ -32,7 +32,7 @@
         "@parcel/transformer-sass": "^2.0.0-rc.0",
         "custom-event-polyfill": "^1.0.7",
         "element-qsa-scope": "^1.1.0",
-        "parcel": "next",
+        "parcel": "^2.0.0",
         "sass": "^1.43.4"
     }
 }
