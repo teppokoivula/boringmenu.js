@@ -3,7 +3,7 @@
 /**
  * boringmenu.js
  *
- * @version 0.2.0
+ * @version 0.3.0
  */
 export default class boringmenu {
 
@@ -36,6 +36,7 @@ export default class boringmenu {
 				'menu.close': 'fas fa-times',
 			},
 			id: 'boringmenu-' + this.getID(),
+			mode: 'default',
 		};
 
 		// Polyfills for IE11
@@ -149,16 +150,22 @@ export default class boringmenu {
 	 * @param {(Object|null)} menuToggleIcon
 	 * @param {boolean} hiddenState
 	 * @param {boolean} triggerEvent
-	 * @returns {Object} Modified arguments
+	 * @param {boolean} isRecursive
 	 */
-	toggleMenu(menu, menuToggle, menuToggleText, menuToggleIcon, hiddenState, triggerEvent = true) {
+	toggleMenu(menu, menuToggle, menuToggleText, menuToggleIcon, hiddenState, triggerEvent = true, isRecursive = false) {
 		menu.hidden = hiddenState;
+		menu.menuToggleIcon = menu.menuToggleIcon || null;
 		menuToggle.setAttribute('aria-expanded', !menu.hidden);
 		menuToggleText.nodeValue = this.options.labels[menu.hidden ? 'menu.open' : 'menu.close'];
 		if (menuToggleIcon != null) {
-			const newMenuToggleIcon = this.getToggleIcon(menu, menuToggleIcon);
-			menuToggleIcon.parentNode.replaceChild(newMenuToggleIcon, menuToggleIcon);
-			menuToggleIcon = newMenuToggleIcon;
+			menu.menuToggleIcon = this.getToggleIcon(menu);
+			menuToggleIcon.parentNode.replaceChild(menu.menuToggleIcon, menuToggleIcon);
+		}
+		if (!isRecursive && this.options.mode === 'accordion') {
+			this.menuObjects.forEach(menuObject => {
+				if (menuObject.id === menu.id || menuObject.hidden || menuObject.contains(menu) || !menuObject.menuToggle) return;
+				this.toggleMenu(menuObject, menuObject.menuToggle, menuObject.menuToggleText, menuObject.menuToggleIcon, true, true, true);
+			});
 		}
 		if (triggerEvent) {
 			this.menu.dispatchEvent(new CustomEvent('boringmenu-menu-toggle-done', {
@@ -170,9 +177,6 @@ export default class boringmenu {
 				}
 			}));
 		}
-		return {
-			menuToggleIcon: menuToggleIcon
-		};
 	}
 
 	/**
@@ -205,13 +209,15 @@ export default class boringmenu {
 			menuToggle.appendChild(menuToggleIcon);
 		}
 
+		// Store references to toggle objects in menu
+		submenu.menuToggle = menuToggle;
+		submenu.menuToggleText = menuToggleText;
+		submenu.menuToggleIcon = menuToggleIcon;
+
 		// Add click event listener
 		menuToggle.addEventListener('click', (event) => {
 			event.stopPropagation();
-			const menuArgs = this.toggleMenu(submenu, menuToggle, menuToggleText, menuToggleIcon, !submenu.hidden);
-			if (menuArgs.menuToggleIcon != null) {
-				menuToggleIcon = menuArgs.menuToggleIcon;
-			}
+			this.toggleMenu(submenu, submenu.menuToggle, submenu.menuToggleText, submenu.menuToggleIcon, !submenu.hidden);
 		});
 
 		// Add keydown event listener
@@ -221,15 +227,9 @@ export default class boringmenu {
 			if ([40, 38, 13, 32].indexOf(event.keyCode) > -1) {
 				event.preventDefault();
 				hiddenState = event.keyCode === 40 ? false : (event.keyCode === 38 ? true : !submenu.hidden);
-				const menuArgs = this.toggleMenu(submenu, menuToggle, menuToggleText, menuToggleIcon, hiddenState);
-				if (menuArgs.menuToggleIcon != null) {
-					menuToggleIcon = menuArgs.menuToggleIcon;
-				}
+				this.toggleMenu(submenu, submenu.menuToggle, submenu.menuToggleText, submenu.menuToggleIcon, hiddenState);
 			}
 		});
-
-		// Store reference to toggle in menu
-		submenu.menuToggle = menuToggle;
 
 		return menuToggle;
 	}
