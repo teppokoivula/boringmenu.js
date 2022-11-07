@@ -3,11 +3,11 @@ Boring menu
 
 Boring menu is a JavaScript library for generating tree type navigation menus with toggle buttons for branches. Primarily developed with mobile navigation in mind, but technically the library can be used whenever a "boring menu" is needed.
 
-You can find a simple example from the [demo directory](./demo/index.html).
-
 ## Getting started
 
-1. Install the library
+You can find an example using boring menu from the [demo directory](./demo/index.html).
+
+### 1. Install the library
 
 ```console
 npm i @teppokoivula/boringmenu
@@ -15,7 +15,7 @@ npm i @teppokoivula/boringmenu
 
 Alternatively download or clone module source code (or just the dist directory) from https://github.com/teppokoivula/boringmenu.js.
 
-2. Include JavaScript
+### 2. Include JavaScript
 
 Import module:
 
@@ -35,7 +35,7 @@ If IE11 support is required, include the compat version:
 <script src="boringmenu.js/dist/boringmenu.compat.js"></script>
 ```
 
-3. Include default styles (optional)
+### 3. Include default styles (optional)
 
 ```scss
 @import '@fokke-/bartender.js/dist/bartender.scss';
@@ -45,7 +45,7 @@ If IE11 support is required, include the compat version:
 <link rel="stylesheet" href="boringmenu.js/dist/boringmenu.min.css">
 ```
 
-4. Initialize menu
+### 4. Initialize menu
 
 ```javascript
 new boringmenu();
