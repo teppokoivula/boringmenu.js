@@ -7,10 +7,26 @@ You can find a simple example from the [demo directory](./demo/index.html).
 
 ## Getting started
 
-- Download or clone boringmenu from https://github.com/teppokoivula/boringmenu.js
-- Load boringmenu.min.js: `<script src="boringmenu.js/dist/boringmenu.min.js"></script>`
-- Optionally load default styles: `<link rel="stylesheet" href="boringmenu.js/dist/boringmenu.min.css">`
-- Initialize menu:
+1. Download or clone boringmenu from https://github.com/teppokoivula/boringmenu.js
+2. Load boringmenu.min.js:
+
+```HTML
+<script src="boringmenu.js/dist/boringmenu.min.js"></script>
+```
+
+If IE11 support is required, load the compat version:
+
+```HTML
+<script src="boringmenu.js/dist/boringmenu.compat.js"></script>
+```
+
+3. Optionally load default styles:
+
+```HTML
+<link rel="stylesheet" href="boringmenu.js/dist/boringmenu.min.css">
+```
+
+4. Initialize menu:
 
 ```HTML
 <script>
@@ -41,6 +57,8 @@ new boringmenu({
 		'menu.close': 'Close',
 	},
 	icons: {
+		// supported values for icons are string (used as `<i>` element `class` property),
+		// DOM node (gets cloned for use), or function (gets called, must return DOM node)
 		'menu.open': 'fas fa-plus',
 		'menu.close': 'fas fa-times',
 	},

@@ -1,6 +1,6 @@
 {
     "name": "boringmenu.js",
-    "version": "0.1.1",
+    "version": "0.3.2",
     "description": "Boring menu",
     "author": "Teppo Koivula <teppo.koivula@gmail.com> (https://github.com/teppokoivula)",
     "license": "MPL-2.0",
@@ -9,12 +9,21 @@
     },
     "scss": "dist/boringmenu.min.css",
     "app": "dist/boringmenu.min.js",
+    "compat": "dist/boringmenu.compat.js",
+    "module": "dist/boringmenu.module.js",
     "targets": {
         "scss": {
             "source": "scss/boringmenu.scss"
         },
         "app": {
-            "source": "src/index.js"
+            "source": "src/app.js"
+        },
+        "compat": {
+            "source": "src/compat.js",
+            "outputFormat": "global"
+        },
+        "module": {
+            "source": "src/module.js"
         }
     },
     "browserslist": [
@@ -30,9 +39,9 @@
     "homepage": "https://github.com/teppokoivula/boringmenu.js#readme",
     "devDependencies": {
         "@parcel/transformer-sass": "^2.0.0-rc.0",
+        "parcel": "^2.0.0",
         "custom-event-polyfill": "^1.0.7",
         "element-qsa-scope": "^1.1.0",
-        "parcel": "^2.0.0",
         "sass": "^1.43.4"
     }
 }
