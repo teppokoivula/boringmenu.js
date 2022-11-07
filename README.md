@@ -7,39 +7,55 @@ You can find a simple example from the [demo directory](./demo/index.html).
 
 ## Getting started
 
-1. Download or clone boringmenu from https://github.com/teppokoivula/boringmenu.js
-2. Load boringmenu.min.js:
+1. Install the library
 
-```HTML
+```console
+npm i @teppokoivula/boringmenu
+```
+
+Alternatively download or clone module source code (or just the dist directory) from https://github.com/teppokoivula/boringmenu.js.
+
+2. Include JavaScript
+
+Import module:
+
+```javascript
+import boringmenu from '@teppokoivula/boringmenu'
+```
+
+Alternatively you can include boringmenu.min.js directly:
+
+```html
 <script src="boringmenu.js/dist/boringmenu.min.js"></script>
 ```
 
-If IE11 support is required, load the compat version:
+If IE11 support is required, include the compat version:
 
-```HTML
+```html
 <script src="boringmenu.js/dist/boringmenu.compat.js"></script>
 ```
 
-3. Optionally load default styles:
+3. Include default styles (optional)
 
-```HTML
+```scss
+@import '@fokke-/bartender.js/dist/bartender.scss';
+```
+
+```html
 <link rel="stylesheet" href="boringmenu.js/dist/boringmenu.min.css">
 ```
 
-4. Initialize menu:
+4. Initialize menu
 
-```HTML
-<script>
+```javascript
 new boringmenu();
-</script>
 ```
 
 ## Configuration settings
 
 When initializing boring menu, you can optionally provide following configuration settings:
 
-```HTML
-<script>
+```javascript
 new boringmenu({
 	selectors: {
 		menu: '.boringmenu',
@@ -67,7 +83,6 @@ new boringmenu({
 	// accordion mode limits open branches of each menu to one, closing all others automatically
 	mode: 'default',
 });
-</script>
 ```
 
 Values displayed above are current default values, except for "id" which is by default generated automatically (`boringmenu-[current timestamp]`).
