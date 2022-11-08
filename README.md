@@ -37,9 +37,13 @@ If IE11 support is required, include the compat version:
 
 ### 3. Include default styles (optional)
 
+If using webpack or similar build tool:
+
 ```scss
-@import '@fokke-/bartender.js/dist/bartender.scss';
+@import '@teppokoivula/boringmenu/scss/boringmenu.scss';
 ```
+
+In HTML:
 
 ```html
 <link rel="stylesheet" href="boringmenu.js/dist/boringmenu.min.css">
