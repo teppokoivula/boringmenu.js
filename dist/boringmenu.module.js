@@ -156,7 +156,10 @@ class $bc2d8f1f3c9c1c0f$export$2e2bcd8739ae039 {
         if (!keys.length) return defaults;
         for(let i = 0; i < keys.length; i++){
             const key = keys[i];
-            if (defaults[key] !== null && typeof defaults[key] === "object") Object.assign(options[key], this.mergeOptions(defaults[key], options[key]));
+            if (defaults[key] !== null) {
+                if (typeof defaults[key] === "object") Object.assign(options[key], this.mergeOptions(defaults[key], options[key]));
+                else defaults[key] = options[key];
+            }
         }
         Object.assign(options || {}, defaults);
         return options;
