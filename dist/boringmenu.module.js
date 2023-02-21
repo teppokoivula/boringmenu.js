@@ -149,16 +149,17 @@ class $bc2d8f1f3c9c1c0f$export$2e2bcd8739ae039 {
 	 *
 	 * @param {Object} options
 	 * @param {(Object|null)} defaults
+	 * @param {Number} depth
 	 * @returns {Object}
-	 */ mergeOptions(options, defaults) {
+	 */ mergeOptions(options, defaults, depth = 1) {
         if (defaults == null) defaults = this.defaultOptions;
         let keys = Object.keys(options);
         if (!keys.length) return defaults;
         for(let i = 0; i < keys.length; i++){
             const key = keys[i];
             if (defaults[key] !== null) {
-                if (typeof defaults[key] === "object") Object.assign(options[key], this.mergeOptions(defaults[key], options[key]));
-                else defaults[key] = options[key];
+                if (typeof defaults[key] === "object") Object.assign(options[key], this.mergeOptions(defaults[key], options[key], depth + 1));
+                else if (depth === 1) defaults[key] = options[key];
             }
         }
         Object.assign(options || {}, defaults);
