@@ -1,6 +1,68 @@
 "use strict";
 class $bc2d8f1f3c9c1c0f$export$2e2bcd8739ae039 {
     /**
+	 * Constructor
+	 *
+	 * @param {Object} options Options for an instance of boringmenu
+	 */ constructor(options = {}){
+        // Default options
+        this.defaultOptions = {
+            selectors: {
+                menu: ".boringmenu",
+                item: ":scope > li"
+            },
+            classes: {
+                item: "boringmenu__item",
+                itemActive: "boringmenu__item--active",
+                itemParent: "boringmenu__item--parent",
+                toggle: "boringmenu__toggle",
+                toggleTextContainer: "boringmenu__sr-only"
+            },
+            labels: {
+                "menu.open": "Open",
+                "menu.close": "Close"
+            },
+            icons: {
+                "menu.open": "fas fa-plus",
+                "menu.close": "fas fa-times"
+            },
+            id: "boringmenu-" + this.getID(),
+            mode: "default"
+        };
+        // Polyfills for IE11
+        this.polyfills();
+        // Merge our provided options with defaults
+        this.options = this.mergeOptions(options);
+        // Find menu element and bail out early if none found
+        this.menu = document.querySelector(this.options.selectors.menu);
+        if (!this.menu) {
+            // Trigger the init done event in case some third party is waiting for this to happen
+            document.dispatchEvent(new CustomEvent("boringmenu-init-done"));
+            return;
+        }
+        // Set root menu depth
+        this.menu.setAttribute("data-boringmenu-depth", 1);
+        // Running counter for menu num
+        this.menuNum = 0;
+        // Menu object stash
+        this.menuObjects = [
+            this.menu
+        ];
+        // Merge menu options with existing options
+        if (this.menu.getAttribute("data-boringmenu")) try {
+            this.options = this.mergeOptions(JSON.parse(this.menu.getAttribute("data-boringmenu"), this.options));
+        } catch (e) {}
+        // Add active and parent classes
+        this.addClasses(this.menu, this.options.classes);
+        // Find submenu elements and create toggles
+        this.findSubMenus(this.menu);
+        // Trigger event when menu has been initialized
+        this.menu.dispatchEvent(new CustomEvent("boringmenu-init-done", {
+            bubbles: true,
+            cancelable: true
+        }));
+    }
+    /**
 	 * Add active and parent classes
 	 *
 	 * @param {Object} menu
@@ -214,68 +276,6 @@ class $bc2d8f1f3c9c1c0f$export$2e2bcd8739ae039 {
             writable: true,
             configurable: true
         });
-    }
-    /**
-	 * Constructor
-	 *
-	 * @param {Object} options Options for an instance of boringmenu
-	 */ constructor(options = {}){
-        // Default options
-        this.defaultOptions = {
-            selectors: {
-                menu: ".boringmenu",
-                item: ":scope > li"
-            },
-            classes: {
-                item: "boringmenu__item",
-                itemActive: "boringmenu__item--active",
-                itemParent: "boringmenu__item--parent",
-                toggle: "boringmenu__toggle",
-                toggleTextContainer: "boringmenu__sr-only"
-            },
-            labels: {
-                "menu.open": "Open",
-                "menu.close": "Close"
-            },
-            icons: {
-                "menu.open": "fas fa-plus",
-                "menu.close": "fas fa-times"
-            },
-            id: "boringmenu-" + this.getID(),
-            mode: "default"
-        };
-        // Polyfills for IE11
-        this.polyfills();
-        // Merge our provided options with defaults
-        this.options = this.mergeOptions(options);
-        // Find menu element and bail out early if none found
-        this.menu = document.querySelector(this.options.selectors.menu);
-        if (!this.menu) {
-            // Trigger the init done event in case some third party is waiting for this to happen
-            document.dispatchEvent(new CustomEvent("boringmenu-init-done"));
-            return;
-        }
-        // Set root menu depth
-        this.menu.setAttribute("data-boringmenu-depth", 1);
-        // Running counter for menu num
-        this.menuNum = 0;
-        // Menu object stash
-        this.menuObjects = [
-            this.menu
-        ];
-        // Merge menu options with existing options
-        if (this.menu.getAttribute("data-boringmenu")) try {
-            this.options = this.mergeOptions(JSON.parse(this.menu.getAttribute("data-boringmenu"), this.options));
-        } catch (e) {}
-        // Add active and parent classes
-        this.addClasses(this.menu, this.options.classes);
-        // Find submenu elements and create toggles
-        this.findSubMenus(this.menu);
-        // Trigger event when menu has been initialized
-        this.menu.dispatchEvent(new CustomEvent("boringmenu-init-done", {
-            bubbles: true,
-            cancelable: true
-        }));
     }
 }
 
