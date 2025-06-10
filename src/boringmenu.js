@@ -341,7 +341,7 @@ export default class boringmenu {
 	 * @returns {boolean}
 	 */
 	isHidden(menu) {
-		return this.options.classes.hidden && this.hasClass(menu, this.options.classes.hidden) || !this.options.classes.hidden && menu.hidden;
+		return this.options.classes.hidden && this.hasClass(menu, this.options.classes.hidden) || menu.hidden;
 	}
 
 	/**
@@ -357,7 +357,6 @@ export default class boringmenu {
 			} else {
 				menu.classList.remove(...this.options.classes.hidden);
 			}
-			return;
 		}
 		menu.hidden = hidden;
 	}
