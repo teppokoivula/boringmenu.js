@@ -66,6 +66,7 @@ new boringmenu({
 		item: ':scope > li',
 	},
 	classes: {
+		// each key can contain either one class, or multiple classes with space as a separator
 		item: 'boringmenu__item',
 		itemActive: 'boringmenu__item--active',
 		itemParent: 'boringmenu__item--parent',
@@ -77,14 +78,20 @@ new boringmenu({
 		'menu.close': 'Close',
 	},
 	icons: {
-		// supported values for icons are string (used as `<i>` element `class` property),
-		// DOM node (gets cloned for use), or function (gets called, must return DOM node)
+		// supported values for icons:
+		//
+		// 1) string — used as `<i>` element `class` property
+		// 2) DOM node — gets cloned for use
+		// 3) function — gets called, must return DOM node node; menu object and menu depth get
+		//    passed in as params, e.g. `(menu, depth) => { ... }`
 		'menu.open': 'fas fa-plus',
 		'menu.close': 'fas fa-times',
 	},
 	id: 'boringmenu-1667758153965',
-	// 'default' or 'accordion' mode: default mode allows opening multiple menu branches, while
-	// accordion mode limits open branches of each menu to one, closing all others automatically
+	// supported values for mode:
+	//
+	// 1) 'default' — allows opening multiple menu branches
+	// 2) 'accordion' — limits open branches of each menu to one, closing all others automatically
 	mode: 'default',
 });
 ```

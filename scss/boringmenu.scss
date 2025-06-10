@@ -76,4 +76,8 @@
 		white-space: nowrap;
 		border-width: 0;
 	}
+
+	&__hidden {
+		display: none;
+	}
 }
