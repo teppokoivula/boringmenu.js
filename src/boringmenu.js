@@ -3,7 +3,7 @@
 /**
  * boringmenu.js
  *
- * @version 0.3.7
+ * @version 0.4.0
  */
 export default class boringmenu {
 
@@ -26,6 +26,7 @@ export default class boringmenu {
 				itemParent: 'boringmenu__item--parent',
 				toggle: 'boringmenu__toggle',
 				toggleTextContainer: 'boringmenu__sr-only',
+				hidden: '',
 			},
 			labels: {
 				'menu.open': 'Open',
@@ -37,13 +38,25 @@ export default class boringmenu {
 			},
 			id: 'boringmenu-' + this.getID(),
 			mode: 'default',
-		};
+			path: '',
+		}
 
 		// Polyfills for IE11
 		this.polyfills();
 
 		// Merge our provided options with defaults
 		this.options = this.mergeOptions(options);
+
+		// In case of class options, convert all values to arrays for consistency
+		if (this.options.classes) {
+			Object.keys(this.options.classes).forEach((key) => {
+				if (typeof this.options.classes[key] === 'string') {
+					this.options.classes[key] = this.options.classes[key].split(' ');
+				} else if (!Array.isArray(this.options.classes[key])) {
+					this.options.classes[key] = [];
+				}
+			});
+		}
 
 		// Find menu element and bail out early if none found
 		this.menu = document.querySelector(this.options.selectors.menu);
@@ -89,16 +102,17 @@ export default class boringmenu {
 	 * @param {Object} classes
 	 */
 	addClasses(menu, classes) {
-		const currentPath = window.location.pathname.replace(/\/$/, '') + '/';
-		menu.querySelectorAll('.' + classes.item + '[href="' + currentPath + '"]').forEach(item => {
-			item.classList.add(classes.itemActive);
+		const currentPath = this.options.path || window.location.pathname.replace(/\/$/, '') + '/';
+		const itemsSelector = classes.item.map(itemClass => '.' + itemClass + '[href="' + currentPath + '"]');
+		menu.querySelectorAll(itemsSelector.join(', ')).forEach(item => {
+			item.classList.add(...classes.itemActive);
 			item = item.parentNode;
 			while (item.parentNode) {
 				item = item.parentNode;
 				if (item.tagName == 'LI') {
-					const childItem = item.firstChild;
-					if (childItem !== null && childItem.classList.contains(classes.item) && !childItem.classList.contains(classes.itemActive)) {
-						childItem.classList.add(classes.itemParent);
+					const childItem = item.firstElementChild;
+					if (childItem !== null && this.hasClass(childItem, classes.item) && !this.hasClass(childItem, classes.itemActive)) {
+						childItem.classList.add(...classes.itemParent);
 					}
 				} else if (item.matches(this.options.selectors.menu)) {
 					break;
@@ -126,8 +140,8 @@ export default class boringmenu {
 			submenu.setAttribute('data-boringmenu-depth', depth);
 
 			// Hide menu
-			if (!item.classList.contains(this.options.classes.itemActive) && !item.querySelector('.' + this.options.classes.itemActive)) {
-				submenu.hidden = true;
+			if (!this.hasClass(item, this.options.classes.itemActive) && !item.querySelector('.' + this.options.classes.itemActive)) {
+				this.setHidden(submenu, true);
 			}
 
 			// Insert toggle button before menu item
@@ -153,17 +167,17 @@ export default class boringmenu {
 	 * @param {boolean} isRecursive
 	 */
 	toggleMenu(menu, menuToggle, menuToggleText, menuToggleIcon, hiddenState, triggerEvent = true, isRecursive = false) {
-		menu.hidden = hiddenState;
+		this.setHidden(menu, hiddenState);
 		menu.menuToggleIcon = menu.menuToggleIcon || null;
-		menuToggle.setAttribute('aria-expanded', !menu.hidden);
-		menuToggleText.nodeValue = this.options.labels[menu.hidden ? 'menu.open' : 'menu.close'];
+		menuToggle.setAttribute('aria-expanded', !this.isHidden(menu));
+		menuToggleText.nodeValue = this.options.labels[this.isHidden(menu) ? 'menu.open' : 'menu.close'];
 		if (menuToggleIcon != null) {
 			menu.menuToggleIcon = this.getToggleIcon(menu);
 			menuToggleIcon.parentNode.replaceChild(menu.menuToggleIcon, menuToggleIcon);
 		}
 		if (!isRecursive && this.options.mode === 'accordion') {
 			this.menuObjects.forEach(menuObject => {
-				if (menuObject.id === menu.id || menuObject.hidden || menuObject.contains(menu) || !menuObject.menuToggle) return;
+				if (menuObject.id === menu.id || this.isHidden(menuObject) || menuObject.contains(menu) || !menuObject.menuToggle) return;
 				this.toggleMenu(menuObject, menuObject.menuToggle, menuObject.menuToggleText, menuObject.menuToggleIcon, true, true, true);
 			});
 		}
@@ -189,18 +203,18 @@ export default class boringmenu {
 
 		// Create menu toggle button
 		const menuToggle = document.createElement('button');
-		menuToggle.classList.add(this.options.classes.toggle);
+		menuToggle.classList.add(...this.options.classes.toggle);
 		menuToggle.setAttribute('aria-haspopup', 'true');
-		menuToggle.setAttribute('aria-expanded', !submenu.hidden);
+		menuToggle.setAttribute('aria-expanded', !this.isHidden(submenu));
 		menuToggle.setAttribute('aria-controls', submenu.getAttribute('id'));
 
 		// Add text within container
 		const menuToggleTextContainer = document.createElement('span');
 		if (this.options.classes.toggleTextContainer) {
-			menuToggleTextContainer.classList.add(this.options.classes.toggleTextContainer);
+			menuToggleTextContainer.classList.add(...this.options.classes.toggleTextContainer);
 		}
 		menuToggle.appendChild(menuToggleTextContainer);
-		const menuToggleText = document.createTextNode(this.options.labels[submenu.hidden ? 'menu.open' : 'menu.close']);
+		const menuToggleText = document.createTextNode(this.options.labels[this.isHidden(submenu) ? 'menu.open' : 'menu.close']);
 		menuToggleTextContainer.appendChild(menuToggleText);
 
 		// Add icon (optional)
@@ -217,7 +231,7 @@ export default class boringmenu {
 		// Add click event listener
 		menuToggle.addEventListener('click', (event) => {
 			event.stopPropagation();
-			this.toggleMenu(submenu, submenu.menuToggle, submenu.menuToggleText, submenu.menuToggleIcon, !submenu.hidden);
+			this.toggleMenu(submenu, submenu.menuToggle, submenu.menuToggleText, submenu.menuToggleIcon, !this.isHidden(submenu));
 		});
 
 		// Add keydown event listener
@@ -226,7 +240,7 @@ export default class boringmenu {
 			// 40 = down, 38 = up, 13 = enter, 32 = space
 			if ([40, 38, 13, 32].indexOf(event.keyCode) > -1) {
 				event.preventDefault();
-				hiddenState = event.keyCode === 40 ? false : (event.keyCode === 38 ? true : !submenu.hidden);
+				hiddenState = event.keyCode === 40 ? false : (event.keyCode === 38 ? true : !this.isHidden(submenu));
 				this.toggleMenu(submenu, submenu.menuToggle, submenu.menuToggleText, submenu.menuToggleIcon, hiddenState);
 			}
 		});
@@ -244,18 +258,20 @@ export default class boringmenu {
 	getToggleIcon(submenu, menuToggleIcon) {
 		menuToggleIcon = menuToggleIcon || null;
 		if (this.options.icons['menu.open'] && this.options.icons['menu.close']) {
-			menuToggleIcon = this.options.icons[submenu.hidden ? 'menu.open' : 'menu.close'];
+			menuToggleIcon = this.options.icons[this.isHidden(submenu) ? 'menu.open' : 'menu.close'];
 			if (typeof menuToggleIcon == 'string') {
 				const menuToggleIconClass = menuToggleIcon;
 				menuToggleIcon = document.createElement('i');
 				menuToggleIcon.setAttribute('aria-hidden', true);
-				menuToggleIconClass.split(' ').forEach((iconClass) => {
-					menuToggleIcon.classList.add(iconClass);
-				});
+				menuToggleIcon.classList.add(...menuToggleIconClass.split(' '));
+			} else if (Array.isArray(menuToggleIcon)) {
+				menuToggleIcon = document.createElement('i');
+				menuToggleIcon.setAttribute('aria-hidden', true);
+				menuToggleIcon.classList.add(...menuToggleIcon);
 			} else if (typeof menuToggleIcon == 'object' && typeof menuToggleIcon.cloneNode == 'function') {
 				menuToggleIcon = menuToggleIcon.cloneNode(true);
 			} else if (typeof menuToggleIcon == 'function') {
-				menuToggleIcon = menuToggleIcon();
+				menuToggleIcon = menuToggleIcon(submenu, submenu.getAttribute('data-boringmenu-depth'));
 			}
 		}
 		return menuToggleIcon;
@@ -314,8 +330,58 @@ export default class boringmenu {
 	 *
 	 * @returns {Object}
 	 */
-	 getMenuObjects() {
+	getMenuObjects() {
 		return this.menuObjects;
+	}
+
+	/**
+	 * Check if menu is hidden
+	 *
+	 * @param {Object} menu
+	 * @returns {boolean}
+	 */
+	isHidden(menu) {
+		return this.options.classes.hidden && this.hasClass(menu, this.options.classes.hidden) || menu.hidden;
+	}
+
+	/**
+	 * Set menu hidden
+	 *
+	 * @param {Object} menu
+	 * @param {boolean} hidden
+	 */
+	setHidden(menu, hidden) {
+		if (this.options.classes.hidden) {
+			if (hidden) {
+				menu.classList.add(...this.options.classes.hidden);
+			} else {
+				menu.classList.remove(...this.options.classes.hidden);
+			}
+		}
+		menu.hidden = hidden;
+	}
+
+	/**
+	 * Check if item contains given class (single string value) or classes (array)
+	 *
+	 * @param {Object} item
+	 * @param {(string|Array)} classes
+	 * @returns {boolean}
+	 */
+	hasClass(item, classes) {
+		if (!item || !classes || Array.isArray(classes) && !classes.length) {
+			return false;
+		}
+		if (Array.isArray(classes)) {
+			for (let i = 0; i < classes.length; i++) {
+				if (item.classList.contains(classes[i])) {
+					return true;
+				}
+			}
+		} else if (item.classList.contains(classes)) {
+			return true;
+		}
+		return false;
 	}
 
 	/**

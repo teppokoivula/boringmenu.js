@@ -14,35 +14,35 @@
 		<nav>
 			<ul class="boringmenu" data-boringmenu='{"labels": { "menu.close": "Stäng" }}'>
 				<li class="boringmenu__list-item">
-					<a class="boringmenu__item" href="#">Item 1</a>
+					<a class="boringmenu__item" href="#item-1">Item 1</a>
 				</li>
 				<li class="boringmenu__list-item">
-					<a class="boringmenu__item" href="#">Item 2</a>
+					<a class="boringmenu__item" href="#item-2">Item 2</a>
 					<ul class="boringmenu__list">
 						<li class="boringmenu__list-item">
-							<a class="boringmenu__item" href="#">Item 2.1</a>
+							<a class="boringmenu__item" href="#item-2.1">Item 2.1</a>
 						</li>
 						<li class="boringmenu__list-item">
-							<a class="boringmenu__item" href="#">Item 2.2</a>
+							<a class="boringmenu__item" href="#item-2.2">Item 2.2</a>
 							<ul class="boringmenu__list">
 								<li class="boringmenu__list-item">
-									<a class="boringmenu__item" href="#">Item 2.2.1</a>
+									<a class="boringmenu__item" href="#item-2.2.1">Item 2.2.1</a>
 								</li>
 								<li class="boringmenu__list-item">
-									<a class="boringmenu__item" href="#">Item 2.2.2</a>
+									<a class="boringmenu__item" href="#item-2.2.2">Item 2.2.2</a>
 								</li>
 							</ul>
 						</li>
 					</ul>
 				</li>
 				<li class="boringmenu__list-item">
-					<a class="boringmenu__item" href="#">Item 3</a>
+					<a class="boringmenu__item" href="#item-3">Item 3</a>
 					<ul class="boringmenu__list">
 						<li class="boringmenu__list-item">
-							<a class="boringmenu__item" href="#">Item 3.1</a>
+							<a class="boringmenu__item" href="#item-3.1">Item 3.1</a>
 						</li>
 						<li class="boringmenu__list-item">
-							<a class="boringmenu__item" href="#">Item 3.2</a>
+							<a class="boringmenu__item" href="#item-3.2">Item 3.2</a>
 						</li>
 					</ul>
 				</li>
@@ -54,7 +54,15 @@
 		const menu = new boringmenu({
 			labels: {
 				'menu.open': 'Avaa',
-			}
+			},
+			classes: {
+				item: 'boringmenu__item',
+				itemActive: 'boringmenu__item--active',
+				itemParent: 'boringmenu__item--parent',
+				toggle: 'boringmenu__toggle',
+				toggleTextContainer: 'boringmenu__sr-only',
+				hidden: 'boringmenu__hidden',
+			},
 		});
 		</script>
 
