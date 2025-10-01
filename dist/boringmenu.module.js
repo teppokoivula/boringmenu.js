@@ -264,7 +264,7 @@ class $bc2d8f1f3c9c1c0f$export$2e2bcd8739ae039 {
 	 * @param {Object} menu
 	 * @returns {boolean}
 	 */ isHidden(menu) {
-        return this.options.classes.hidden && this.hasClass(menu, this.options.classes.hidden) || !this.options.classes.hidden && menu.hidden;
+        return this.options.classes.hidden && this.hasClass(menu, this.options.classes.hidden) || menu.hidden;
     }
     /**
 	 * Set menu hidden
@@ -272,10 +272,9 @@ class $bc2d8f1f3c9c1c0f$export$2e2bcd8739ae039 {
 	 * @param {Object} menu
 	 * @param {boolean} hidden
 	 */ setHidden(menu, hidden) {
-        if (this.options.classes.hidden) {
+        if (this.options.classes.hidden.length) {
             if (hidden) menu.classList.add(...this.options.classes.hidden);
             else menu.classList.remove(...this.options.classes.hidden);
-            return;
         }
         menu.hidden = hidden;
     }

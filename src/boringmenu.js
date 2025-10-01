@@ -351,7 +351,7 @@ export default class boringmenu {
 	 * @param {boolean} hidden
 	 */
 	setHidden(menu, hidden) {
-		if (this.options.classes.hidden) {
+		if (this.options.classes.hidden.length) {
 			if (hidden) {
 				menu.classList.add(...this.options.classes.hidden);
 			} else {
