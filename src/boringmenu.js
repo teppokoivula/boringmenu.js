@@ -51,7 +51,7 @@ export default class boringmenu {
 		if (this.options.classes) {
 			Object.keys(this.options.classes).forEach((key) => {
 				if (typeof this.options.classes[key] === 'string') {
-					this.options.classes[key] = this.options.classes[key].split(' ');
+					this.options.classes[key] = this.options.classes[key].split(' ').filter(cls => cls.trim() !== '');
 				} else if (!Array.isArray(this.options.classes[key])) {
 					this.options.classes[key] = [];
 				}

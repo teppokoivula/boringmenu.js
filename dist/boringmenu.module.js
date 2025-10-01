@@ -37,7 +37,7 @@ class $bc2d8f1f3c9c1c0f$export$2e2bcd8739ae039 {
         this.options = this.mergeOptions(options);
         // In case of class options, convert all values to arrays for consistency
         if (this.options.classes) Object.keys(this.options.classes).forEach((key)=>{
-            if (typeof this.options.classes[key] === 'string') this.options.classes[key] = this.options.classes[key].split(' ');
+            if (typeof this.options.classes[key] === 'string') this.options.classes[key] = this.options.classes[key].split(' ').filter((cls)=>cls.trim() !== '');
             else if (!Array.isArray(this.options.classes[key])) this.options.classes[key] = [];
         });
         // Find menu element and bail out early if none found
